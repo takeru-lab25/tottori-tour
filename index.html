@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#022B3A">
+<meta name="apple-mobile-web-app-title" content="鳥取視察">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi6bOl5Y+W5biC6KaW5a+f44OE44Ki44O8IiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAyMkIzQSIsInRoZW1lX2NvbG9yIjoiIzAyMkIzQSIsInN0YXJ0X3VybCI6Ii4ifQ==">
+<title>鳥取市視察ツアー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+/* ===== THEME VARIABLES ===== */
+:root {
+  --primary:#0891B2; --primary-dark:#0E7490; --primary-deeper:#155E75;
+  --primary-light:#22D3EE; --primary-bg:rgba(8,145,178,.06);
+  --accent:#F97316; --accent-light:#FB923C;
+  --success:#10B981; --danger:#EF4444;
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --surface-3:#E2E8F0;
+  --ink:#0F172A; --ink2:#334155; --ink3:#64748B; --ink4:#94A3B8;
+  --border:#E2E8F0; --border-light:#F1F5F9;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04);
+  --radius:16px; --radius-sm:10px; --radius-xs:6px;
+  --sab:env(safe-area-inset-bottom,0px); --sat:env(safe-area-inset-top,0px);
+  --hd-bg:linear-gradient(135deg,#022B3A 0%,#0E4D5E 50%,#0E7490 100%);
+  --tb-bg:rgba(255,255,255,.92);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family:'Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg); color:var(--ink);
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+  min-height:100dvh; overflow-x:hidden;
+  opacity:0; transition:opacity .4s ease;
+}
+body.loaded { opacity:1; }
+
+/* ===== SPLASH ===== */
+.splash {
+  position:fixed; inset:0; z-index:9999;
+  background:linear-gradient(160deg,#022B3A 0%,#0E4D5E 40%,var(--primary) 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  transition:opacity .5s ease, transform .5s ease;
+}
+.splash.hide { opacity:0; transform:scale(1.05); pointer-events:none; }
+.splash-icon {
+  width:72px; height:72px;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:20px;
+  animation:splashPulse 2s ease-in-out infinite;
+}
+.splash-icon i { font-size:1.6rem; color:#fff; }
+@keyframes splashPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+.splash h2 { color:#fff; font-size:1rem; font-weight:700; letter-spacing:.5px; text-align:center; }
+.splash p { color:rgba(255,255,255,.5); font-size:.7rem; font-weight:400; margin-top:6px; letter-spacing:1.5px; }
+.splash-loader { width:40px; height:3px; margin-top:28px; background:rgba(255,255,255,.15); border-radius:3px; overflow:hidden; }
+.splash-loader::after {
+  content:''; display:block; width:60%; height:100%; background:#fff; border-radius:3px;
+  animation:splashLoad 1s ease-in-out infinite;
+}
+@keyframes splashLoad { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+
+/* ===== HEADER ===== */
+.hd {
+  position:sticky; top:0; z-index:100;
+  background:var(--hd-bg); color:#fff;
+  padding:12px 16px; padding-top:calc(12px + var(--sat));
+  display:flex; align-items:center; gap:12px;
+  backdrop-filter:saturate(180%) blur(20px);
+  transition:background .3s ease;
+}
+.hd::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:rgba(255,255,255,.08); }
+.hd-text { flex:1; min-width:0; }
+.hd-text h1 { font-size:.72rem; font-weight:700; letter-spacing:.3px; line-height:1.35; }
+.hd-text p { font-size:.55rem; font-weight:400; opacity:.4; margin-top:1px; letter-spacing:.6px; }
+
+/* ===== BOTTOM TAB ===== */
+.tb {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  display:flex; background:var(--tb-bg);
+  backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border); padding-bottom:var(--sab);
+  transition:background .3s ease;
+}
+.tb a {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:8px 0 6px; color:var(--ink4);
+  text-decoration:none; position:relative;
+  transition:color .25s ease; cursor:pointer; -webkit-user-select:none; user-select:none;
+}
+.tb a.on { color:var(--primary); }
+.tb a i { font-size:1.05rem; transition:transform .25s cubic-bezier(.34,1.56,.64,1); }
+.tb a.on i { transform:scale(1.12); }
+.tb a span { font-size:.55rem; font-weight:600; margin-top:3px; letter-spacing:.3px; }
+.tb-indicator {
+  position:absolute; top:0; height:2.5px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-light));
+  border-radius:0 0 3px 3px;
+  transition:left .35s cubic-bezier(.4,0,.2,1), width .35s cubic-bezier(.4,0,.2,1);
+}
+
+/* ===== PAGE ===== */
+.pg {
+  display:none; padding:16px 16px calc(62px + var(--sab) + 16px);
+  max-width:540px; margin:0 auto;
+  animation:pageIn .4s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+.pg.on { display:block; }
+@keyframes pageIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== HERO ===== */
+.hero {
+  background:linear-gradient(135deg,#022B3A 0%,var(--primary-deeper) 40%,var(--primary) 100%);
+  color:#fff; border-radius:var(--radius); padding:20px 22px;
+  position:relative; overflow:hidden; margin-bottom:18px;
+  box-shadow:0 8px 24px rgba(8,145,178,.2);
+}
+.hero::before {
+  content:''; position:absolute; right:-30px; top:-30px;
+  width:140px; height:140px;
+  background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%); border-radius:50%;
+}
+.hero::after {
+  content:''; position:absolute; left:-20px; bottom:-30px;
+  width:100px; height:100px;
+  background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%); border-radius:50%;
+}
+.hero-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.hero-badge {
+  display:inline-block; font-size:.55rem; font-weight:700;
+  letter-spacing:3px; background:rgba(255,255,255,.12);
+  padding:3px 10px; border-radius:4px; margin-bottom:6px;
+}
+.hero strong { font-size:1.25rem; font-weight:900; display:block; letter-spacing:.5px; position:relative; z-index:1; }
+.hero-sub { font-size:.62rem; font-weight:400; opacity:.55; margin-top:3px; position:relative; z-index:1; }
+.hero-bottom { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; position:relative; z-index:1; }
+.hero-chip {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:.58rem; font-weight:500;
+  background:rgba(255,255,255,.1); padding:4px 10px; border-radius:6px;
+}
+.hero-chip i { font-size:.55rem; }
+
+
+
+/* ===== INFO CARDS ===== */
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+.info-card {
+  background:var(--surface); border-radius:var(--radius-sm);
+  padding:12px 14px; border:1px solid var(--border-light);
+  box-shadow:var(--shadow-sm); cursor:pointer;
+  transition:transform .2s, box-shadow .2s;
+  text-decoration:none; color:inherit; display:block;
+}
+.info-card:active { transform:scale(.97); }
+.info-card-icon {
+  width:30px; height:30px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; margin-bottom:8px;
+}
+.info-card-icon.blue { background:rgba(8,145,178,.08); color:var(--primary); }
+.info-card-icon.orange { background:rgba(249,115,22,.08); color:var(--accent); }
+.info-card-icon.green { background:rgba(16,185,129,.08); color:var(--success); }
+.info-card-icon.red { background:rgba(239,68,68,.08); color:var(--danger); }
+.info-card strong { font-size:.68rem; font-weight:700; display:block; line-height:1.3; }
+.info-card span { font-size:.55rem; color:var(--ink3); }
+
+/* ===== TIMELINE ===== */
+.tl { position:relative; padding-left:28px; }
+.tl::before {
+  content:''; position:absolute; left:10px; top:8px; bottom:8px;
+  width:2px; background:linear-gradient(180deg,var(--primary-light),var(--primary),var(--primary-deeper));
+  border-radius:2px; opacity:.18;
+}
+
+/* Travel badge between items */
+.travel {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 0 4px 2px; margin:2px 0;
+  font-size:.52rem; font-weight:600; color:var(--ink4);
+  position:relative;
+}
+.travel i { font-size:.5rem; color:var(--primary); opacity:.5; }
+.travel::before {
+  content:''; position:absolute; left:-18px; top:50%;
+  width:4px; height:4px; border-radius:50%;
+  background:var(--ink4); opacity:.25;
+  transform:translateY(-50%);
+}
+
+/* Timeline item */
+.ti { position:relative; margin-bottom:4px; }
+.ti-dot {
+  position:absolute; left:-22px; top:18px;
+  width:8px; height:8px; border-radius:50%;
+  background:var(--primary); border:2px solid var(--bg);
+  box-shadow:0 0 0 2px rgba(8,145,178,.2); z-index:2;
+  transition:all .3s ease;
+}
+.ti.done .ti-dot { background:var(--success); box-shadow:0 0 0 2px rgba(16,185,129,.2); }
+.ti.active .ti-dot {
+  background:var(--accent); box-shadow:0 0 0 3px rgba(249,115,22,.25);
+  transform:scale(1.3);
+}
+.ti.active .ti-dot::after {
+  content:''; position:absolute; inset:-5px;
+  border:2px solid var(--accent); border-radius:50%;
+  animation:dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse { 0%,100%{transform:scale(1);opacity:.4} 50%{transform:scale(1.5);opacity:0} }
+
+/* Card */
+.tc {
+  background:var(--surface); border-radius:var(--radius-sm);
+  padding:14px 16px; position:relative; overflow:hidden;
+  border:1px solid var(--border-light); box-shadow:var(--shadow-sm);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  cursor:pointer;
+}
+.tc:active { transform:scale(.98); }
+.ti.active .tc { border-color:rgba(249,115,22,.2); box-shadow:0 4px 12px rgba(249,115,22,.08); }
+.ti.done .tc { opacity:.65; }
+
+/* Ripple */
+.ripple {
+  position:absolute; border-radius:50%;
+  background:rgba(8,145,178,.12);
+  transform:scale(0); animation:rippleAnim .5s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes rippleAnim { to{transform:scale(2.5); opacity:0;} }
+
+.tc-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.tc-main { flex:1; min-width:0; }
+.tc .time {
+  font-size:.58rem; font-weight:700; color:var(--primary);
+  letter-spacing:.6px; margin-bottom:2px;
+  display:flex; align-items:center; gap:6px;
+}
+.ti.active .tc .time { color:var(--accent); }
+.ti.done .tc .time { color:var(--success); }
+.ti.done .tc .time::after { content:'\f00c'; font-family:'Font Awesome 6 Free'; font-weight:900; font-size:.5rem; }
+
+.tc .name { font-size:.82rem; font-weight:700; color:var(--ink); line-height:1.35; }
+.tc .dur { font-size:.52rem; color:var(--ink4); margin-top:2px; font-weight:500; }
+.tc .em {
+  width:36px; height:36px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:var(--radius-sm); background:var(--primary-bg); color:var(--primary);
+}
+.ti.active .tc .em { background:rgba(249,115,22,.08); color:var(--accent); }
+.tc .em i { font-size:.85rem; }
+
+/* Detail expand */
+.tc-detail {
+  max-height:0; overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1), margin .35s ease, opacity .25s ease;
+  opacity:0;
+}
+.tc.open .tc-detail { max-height:350px; margin-top:10px; opacity:1; }
+.tc-detail-inner {
+  padding-top:10px; border-top:1px solid var(--border-light);
+  font-size:.66rem; color:var(--ink3); line-height:1.7;
+}
+.tc-loc {
+  display:flex; align-items:center; gap:5px; margin-bottom:5px; font-weight:500;
+}
+.tc-loc i { font-size:.55rem; color:var(--primary); }
+.tc-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.tc-action {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:.58rem; font-weight:600; padding:5px 10px;
+  border-radius:6px; border:none; cursor:pointer;
+  transition:all .2s; text-decoration:none;
+  -webkit-user-select:none; user-select:none;
+}
+.tc-action.map {
+  background:rgba(8,145,178,.08); color:var(--primary);
+}
+.tc-action.map:active { background:rgba(8,145,178,.18); }
+.tc-action i { font-size:.55rem; }
+
+.tc-chevron {
+  position:absolute; right:14px; bottom:10px;
+  font-size:.5rem; color:var(--ink4); transition:transform .3s ease;
+}
+.tc.open .tc-chevron { transform:rotate(180deg); }
+
+/* ===== MEMBER PAGE ===== */
+.mh {
+  display:flex; align-items:center; gap:14px; margin-bottom:14px;
+}
+.mh-ic {
+  width:42px; height:42px; flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(8,145,178,.2);
+}
+.mh-ic i { font-size:.9rem; color:#fff; }
+.mh div strong { font-size:.85rem; font-weight:700; display:block; }
+.mh div span { font-size:.62rem; color:var(--ink3); font-weight:400; }
+.member-count {
+  display:inline-flex; align-items:center; gap:4px;
+  background:var(--primary-bg); color:var(--primary);
+  font-size:.58rem; font-weight:700; padding:3px 8px; border-radius:5px; margin-left:6px;
+}
+
+
+/* Company card */
+.mc {
+  background:var(--surface); border-radius:var(--radius);
+  margin-bottom:12px; box-shadow:var(--shadow-sm);
+  border:1px solid var(--border-light); overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.mc:active { transform:scale(.985); }
+.mc-bar { height:3px; background:linear-gradient(90deg,var(--primary),var(--primary-light),var(--accent-light)); }
+.mc-body { padding:14px 16px; position:relative; }
+.mc-wm {
+  position:absolute; right:4px; bottom:-4px;
+  font-size:3.2rem; opacity:.04; pointer-events:none; color:var(--primary);
+}
+.mc .co { font-size:.8rem; font-weight:700; line-height:1.35; color:var(--ink); }
+.mc .meta { display:flex; align-items:center; gap:10px; margin:5px 0 6px; flex-wrap:wrap; }
+.mc .meta span {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:.58rem; font-weight:500; color:var(--ink3);
+}
+.mc .meta i { font-size:.5rem; }
+.mc .role-badge {
+  display:inline-block; font-size:.5rem; font-weight:600;
+  background:rgba(249,115,22,.08); color:var(--accent);
+  padding:2px 7px; border-radius:4px;
+}
+.mc .ds {
+  font-size:.64rem; color:var(--ink3); line-height:1.75; margin:6px 0 10px;
+}
+.mc .hp {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:.6rem; font-weight:600; color:var(--primary); text-decoration:none;
+  padding:6px 12px; border:1.5px solid var(--primary); border-radius:8px;
+  transition:all .2s ease; -webkit-user-select:none;
+}
+.mc .hp:active { background:var(--primary); color:#fff; transform:scale(.96); }
+.mc .hp i { font-size:.55rem; }
+
+
+
+/* ===== TOAST ===== */
+.toast {
+  position:fixed; bottom:calc(120px + var(--sab));
+  left:50%; transform:translateX(-50%) translateY(20px);
+  z-index:600; background:var(--ink);
+  color:#fff; padding:10px 18px; border-radius:10px;
+  font-size:.65rem; font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+  opacity:0; transition:all .3s cubic-bezier(.4,0,.2,1);
+  pointer-events:none; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-prog {
+  position:fixed; top:0; left:0; z-index:200;
+  height:2px; background:linear-gradient(90deg,var(--primary),var(--primary-light));
+  width:0%; transition:width .1s linear;
+}
+
+/* ===== ANIMATIONS ===== */
+.fade-in { opacity:0; transform:translateY(16px); animation:fadeInUp .5s ease forwards; }
+@keyframes fadeInUp { to{opacity:1;transform:translateY(0)} }
+.stagger-1{animation-delay:.05s} .stagger-2{animation-delay:.1s} .stagger-3{animation-delay:.15s}
+.stagger-4{animation-delay:.2s} .stagger-5{animation-delay:.25s} .stagger-6{animation-delay:.3s}
+.stagger-7{animation-delay:.35s} .stagger-8{animation-delay:.4s} .stagger-9{animation-delay:.45s}
+
+@media(min-width:480px) {
+  .pg { padding-left:22px; padding-right:22px; }
+  .mc-body { padding:18px 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Splash -->
+<div class="splash" id="splash">
+  <div class="splash-icon"><i class="fa-solid fa-compass"></i></div>
+  <h2>鳥取市視察ツアー</h2>
+  <p>2026.3.5 - 3.6</p>
+  <div class="splash-loader"></div>
+</div>
+
+<!-- Scroll Progress -->
+<div class="scroll-prog" id="scrollProg"></div>
+
+<!-- Header -->
+<header class="hd">
+  <div class="hd-text">
+    <h1>地テレ共創ハブ 鳥取市視察ツアー</h1>
+    <p>TOTTORI INSPECTION TOUR 2026</p>
+  </div>
+</header>
+
+<!-- Bottom Tab -->
+<nav class="tb" id="tabBar">
+  <div class="tb-indicator" id="tabIndicator"></div>
+  <a class="on" data-tab="d1" onclick="go('d1')"><i class="fa-solid fa-calendar-day"></i><span>3/5 Thu</span></a>
+  <a data-tab="d2" onclick="go('d2')"><i class="fa-solid fa-calendar-day"></i><span>3/6 Fri</span></a>
+  <a data-tab="mb" onclick="go('mb')"><i class="fa-solid fa-building"></i><span>参加企業</span></a>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+
+<!-- ===== DAY 1 ===== -->
+<div id="d1" class="pg on">
+  <div class="hero fade-in">
+    <div class="hero-top">
+      <div>
+        <span class="hero-badge">DAY 1</span>
+        <strong>3月5日（木）</strong>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="tl" id="tl1">
+    <div class="ti fade-in stagger-2" data-time="10:45" data-end="11:00" data-date="2026-03-05" data-id="d1-1">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">10:45</div>
+            <div class="name">鳥取空港 到着</div>
+            <div class="dur">15分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-plane-arrival"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-3" data-time="11:00" data-end="11:40" data-date="2026-03-05" data-id="d1-2">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">11:00</div>
+            <div class="name">オリエンテーション</div>
+            <div class="dur">40分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-clipboard-list"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約10分</div>
+
+    <div class="ti fade-in stagger-4" data-time="11:40" data-end="13:00" data-date="2026-03-05" data-id="d1-3">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">11:40</div>
+            <div class="name">国立大学法人鳥取大学</div>
+            <div class="dur">1時間</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-graduation-cap"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取大学キャンパス</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取大学" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-5" data-time="13:00" data-end="14:15" data-date="2026-03-05" data-id="d1-4">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">13:00</div>
+            <div class="name">昼食</div>
+            <div class="dur">1時間15分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-utensils"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+
+    <div class="ti fade-in stagger-6" data-time="14:15" data-end="14:45" data-date="2026-03-05" data-id="d1-5">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">14:15</div>
+            <div class="name">鳥取砂丘</div>
+            <div class="dur">30分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-mountain-sun"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-7" data-time="14:45" data-end="15:15" data-date="2026-03-05" data-id="d1-6">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">14:45</div>
+            <div class="name">（株）skyer 訪問</div>
+            <div class="dur">30分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-helicopter"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-8" data-time="15:15" data-end="16:15" data-date="2026-03-05" data-id="d1-7">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">15:15</div>
+            <div class="name">参加自治体紹介（鳥取県、鳥取市、倉吉市）</div>
+            <div class="dur">1時間</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-flag"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-9" data-time="16:15" data-end="18:30" data-date="2026-03-05" data-id="d1-8">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">16:15</div>
+            <div class="name">テレワーク＆意見交換</div>
+            <div class="dur">2時間15分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-comments"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>SANDBOX</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=SANDBOX+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-person-walking"></i>会場移動</div>
+
+    <div class="ti fade-in stagger-9" data-time="18:30" data-end="20:30" data-date="2026-03-05" data-id="d1-9">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">18:30</div>
+            <div class="name">懇親会</div>
+            <div class="dur">2時間</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-champagne-glasses"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>グラッチェ</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=グラッチェ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== DAY 2 ===== -->
+<div id="d2" class="pg">
+  <div class="hero fade-in">
+    <div class="hero-top">
+      <div>
+        <span class="hero-badge">DAY 2</span>
+        <strong>3月6日（金）</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl" id="tl2">
+    <div class="ti fade-in stagger-1" data-time="09:30" data-end="10:40" data-date="2026-03-06" data-id="d2-1">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">09:30</div>
+            <div class="name">（株）まるにわ 訪問</div>
+            <div class="dur">1時間10分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-house-chimney"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=まるにわ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約20分</div>
+
+    <div class="ti fade-in stagger-2" data-time="10:40" data-end="11:30" data-date="2026-03-06" data-id="d2-2">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">10:40</div>
+            <div class="name">カトカミ 視察</div>
+            <div class="dur">50分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-scissors"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=カトカミ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-3" data-time="11:30" data-end="12:40" data-date="2026-03-06" data-id="d2-3">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">11:30</div>
+            <div class="name">昼食</div>
+            <div class="dur">1時間10分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-utensils"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+
+    <div class="ti fade-in stagger-4" data-time="12:40" data-end="14:00" data-date="2026-03-06" data-id="d2-4">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">12:40</div>
+            <div class="name">（株）鳥取銀行 訪問</div>
+            <div class="dur">1時間20分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-landmark"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取銀行 本店</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取銀行+本店" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約10分</div>
+
+    <div class="ti fade-in stagger-5" data-time="14:00" data-end="15:15" data-date="2026-03-06" data-id="d2-5">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">14:00</div>
+            <div class="name">（株）LIMNO 訪問</div>
+            <div class="dur">1時間15分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-bolt"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=LIMNO+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+
+    <div class="ti fade-in stagger-6" data-time="15:15" data-end="17:15" data-date="2026-03-06" data-id="d2-6">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">15:15</div>
+            <div class="name">鳥取市役所にて意見交換</div>
+            <div class="dur">2時間</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-handshake"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取市役所</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取市役所" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-7" data-time="17:15" data-end="17:50" data-date="2026-03-06" data-id="d2-7">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">17:15</div>
+            <div class="name">クロージング</div>
+            <div class="dur">35分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-trophy"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取市</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取市役所" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="travel"><i class="fa-solid fa-bus"></i>空港へ移動 約25分</div>
+
+    <div class="ti fade-in stagger-8" data-time="17:50" data-end="18:35" data-date="2026-03-06" data-id="d2-8">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">17:50</div>
+            <div class="name">鳥取空港 到着</div>
+            <div class="dur">45分</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-car"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-9" data-time="18:35" data-end="20:00" data-date="2026-03-06" data-id="d2-9">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">18:35</div>
+            <div class="name">鳥取空港 離陸</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-plane-departure"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          ANA298便
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== MEMBERS ===== -->
+<div id="mb" class="pg">
+  <div class="mh fade-in">
+    <div class="mh-ic"><i class="fa-solid fa-building"></i></div>
+    <div>
+      <strong>参加企業一覧<span class="member-count">10社</span></strong>
+      <span>地テレ共創ハブ参画企業</span>
+    </div>
+  </div>
+
+
+  <div class="mc fade-in stagger-2">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-rotate mc-wm"></i>
+      <div class="co">株式会社ライトライト</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>宮崎県宮崎市</span><span><i class="fa-solid fa-user"></i>齋藤 隆太 様</span></div>
+      <span class="role-badge">代表取締役</span>
+      <div class="ds">事業承継マッチングプラットフォーム「relay」を運営。経営者の想いを実名で公開し、共感ベースで後継者とつなぐ"オープンネーム事業承継"が特徴。全国100超の公的機関と連携し、鳥取県では「relay the local 鳥取県」を推進中。</div>
+
+      <a class="hp" href="https://light-right.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-3">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-gem mc-wm"></i>
+      <div class="co">株式会社CRAFTING JAPAN</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>神奈川県横浜市</span><span><i class="fa-solid fa-user"></i>山崎 孝一郎 様</span></div>
+      <span class="role-badge">取締役</span>
+      <div class="ds">日本の工芸・ものづくり文化を次世代につなぐブランド事業を展開。百貨店・商業施設と連携した工芸品のプロモーションやイベント企画を手がけ、食・観光・工芸・アートを横断し地域の価値を全国へ届ける地域商社。</div>
+
+      <a class="hp" href="https://craftingjapan.stores.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-4">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-heart mc-wm"></i>
+      <div class="co">株式会社river（官民共創支援組織）</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都品川区</span><span><i class="fa-solid fa-user"></i>小坪 拓也 様</span></div>
+      <span class="role-badge">代表取締役</span>
+      <div class="ds">企業版ふるさと納税サービス「キフゲート」を運営。自治体・企業ネットワークと政府方針のナレッジで地域課題解決をトータルコーディネート。内閣府「地テレ共創ハブ」以外にも多数の省庁連携プラットフォームに参画。</div>
+
+      <a class="hp" href="https://ri-ver.com/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-5">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-display mc-wm"></i>
+      <div class="co">株式会社aubeBiz</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>尾田 尚子 様</span></div>
+      <span class="role-badge">広報部 / 地方創生部</span>
+      <div class="ds">テレワーク活用の共創型BPOサービスを提供。13年以上100％リモート組織を運営し、総務省「テレワークトップランナー2025」選出。事務・経理・制作のワンストップ代行とテレワーカー育成を展開。</div>
+
+      <a class="hp" href="https://aubebiz.co.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-6">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-bicycle mc-wm"></i>
+      <div class="co">コギコギ株式会社</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>中島 幹彰 様</span></div>
+      <span class="role-badge">CEO</span>
+      <div class="ds">電動アシスト自転車のシェアサイクル「COGICOGI」を全国41エリアで展開するMaaS企業。観光二次交通の補完、移住定住・関係人口づくり、ローカル鉄道の沿線活性化を支援。グリスロなど低速EVの運行サービスも実施。</div>
+
+      <a class="hp" href="https://cogicogi.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-7">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-calculator mc-wm"></i>
+      <div class="co">メリービズ株式会社</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>石川 淳一 様</span></div>
+      <span class="role-badge">社長室 室長</span>
+      <div class="ds">「ビジネスを楽しく」をVisionに、全国2,500名超の経理プロ人材によるオンライン経理アウトソーシングおよび経理DXコンサルティングを提供。累計1,000社以上の支援実績。</div>
+
+      <a class="hp" href="https://merrybiz.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-8">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-share-nodes mc-wm"></i>
+      <div class="co">株式会社EmpaC</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都品川区</span><span><i class="fa-solid fa-user"></i>奥山 幸佑 様</span></div>
+      <span class="role-badge">Sales Manager</span>
+      <div class="ds">Instagram・X・TikTok・LINE特化のSNSマーケティング企業。「バズより信頼、数字より共感」をコンセプトに100社以上の企業SNS戦略を支援。日本・台湾・韓国の多言語対応も可能。</div>
+
+      <a class="hp" href="https://www.empac.co.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-9">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-piggy-bank mc-wm"></i>
+      <div class="co">FPサテライト株式会社</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都</span><span><i class="fa-solid fa-user"></i>坪谷 亮 様</span></div>
+      <span class="role-badge">代表取締役</span>
+      <div class="ds">「金融商品を一切販売しない」完全中立のFP企業。ライフプラン相談からマネーセミナー、事業計画策定、融資・補助金獲得支援まで包括的にカバー。中小企業庁「経営革新等支援機関」認定。</div>
+
+      <a class="hp" href="https://fpsatellite.co.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-9">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-chalkboard-user mc-wm"></i>
+      <div class="co">株式会社MOVED</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都大田区 / 新潟県</span><span><i class="fa-solid fa-user"></i>渋谷 雄大 様</span></div>
+      <span class="role-badge">代表取締役</span>
+      <div class="ds">プレゼン研修やkintoneを活用した業務改善支援を展開。総務省「テレワーク先駆者百選」認定のフルリモート企業。新潟県糸魚川市にてビジネス共創拠点「Catalo」を2025年8月にオープン。</div>
+
+      <a class="hp" href="https://www.moved.co.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+
+  <div class="mc fade-in stagger-9">
+    <div class="mc-bar"></div><div class="mc-body">
+      <i class="fa-solid fa-couch mc-wm"></i>
+      <div class="co">コクヨ株式会社</div>
+      <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都港区</span><span><i class="fa-solid fa-user"></i>城間 健市郎 様</span></div>
+      <span class="role-badge">ソーシャルイノベーションG</span>
+      <div class="ds">創業121年・東証プライム上場のオフィス家具大手。ソーシャルイノベーショングループは地域活性化・自治体共創に特化。群馬県庁「NETSUGEN」整備、徳島県「神山まるごと高専」支援など全国で実績多数。</div>
+
+      <a class="hp" href="https://www.kokuyo.com/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+// ===== STATE =====
+var tabs = ['d1','d2','mb'], cur = 0;
+// ===== INIT =====
+window.addEventListener('load', function() {
+  document.body.classList.add('loaded');
+  setTimeout(function() {
+    var s = document.getElementById('splash');
+    s.classList.add('hide');
+    setTimeout(function() { s.style.display='none'; }, 500);
+  }, 1100);
+  updateTabIndicator();
+  updateTimeline();
+  setInterval(updateTimeline, 60000);
+});
+
+// ===== TAB NAV =====
+function go(id) {
+  document.querySelectorAll('.tc.open').forEach(function(c){c.classList.remove('open')});
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.tb a').forEach(function(t){t.classList.remove('on')});
+  var pg = document.getElementById(id);
+  pg.classList.add('on');
+  cur = tabs.indexOf(id);
+  if(cur>=0) document.querySelectorAll('.tb a')[cur].classList.add('on');
+  updateTabIndicator();
+  window.scrollTo({top:0, behavior:'smooth'});
+  pg.querySelectorAll('.fade-in').forEach(function(el){
+    el.style.animation='none'; el.offsetHeight; el.style.animation='';
+  });
+}
+
+function updateTabIndicator() {
+  var bar = document.getElementById('tabBar');
+  var ind = document.getElementById('tabIndicator');
+  var a = bar.querySelectorAll('a')[cur];
+  if(!a||!ind) return;
+  ind.style.left = a.offsetLeft+'px';
+  ind.style.width = a.offsetWidth+'px';
+}
+window.addEventListener('resize', updateTabIndicator);
+
+// ===== CARD EXPAND =====
+function toggleCard(el) {
+  // Ripple effect
+  var rect = el.getBoundingClientRect();
+  var ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  var size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  var touch = event || window.event;
+  if(touch && touch.clientX) {
+    ripple.style.left = (touch.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (touch.clientY - rect.top - size/2) + 'px';
+  }
+  el.appendChild(ripple);
+  setTimeout(function(){ripple.remove()},500);
+
+  el.classList.toggle('open');
+}
+// ===== TIMELINE =====
+function updateTimeline() {
+  var now = new Date();
+  document.querySelectorAll('.ti').forEach(function(ti) {
+    var t = ti.getAttribute('data-time');
+    var d = ti.getAttribute('data-date');
+    var e = ti.getAttribute('data-end');
+    if(!t||!d) return;
+    var tp = t.split(':'), dp = d.split('-');
+    var start = new Date(+dp[0],dp[1]-1,+dp[2],+tp[0],+tp[1]);
+    var end;
+    if(e) { var ep=e.split(':'); end=new Date(+dp[0],dp[1]-1,+dp[2],+ep[0],+ep[1]); }
+    else { end = new Date(start.getTime()+3600000); }
+
+    ti.classList.remove('done','active');
+    if(now >= end) ti.classList.add('done');
+    else if(now >= start && now < end) ti.classList.add('active');
+  });
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2000);
+}
+
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', function(){
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var p = h > 0 ? (window.scrollY/h)*100 : 0;
+  document.getElementById('scrollProg').style.width = p+'%';
+},{passive:true});
+
+// ===== SWIPE =====
+(function(){
+  var sx=0,sy=0,ok=false;
+  document.addEventListener('touchstart',function(e){
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY; ok=true;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!ok) return; ok=false;
+    var dx=e.changedTouches[0].clientX-sx;
+    var dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<70||Math.abs(dy)>Math.abs(dx)*.6) return;
+    if(dx<0&&cur<tabs.length-1) go(tabs[cur+1]);
+    else if(dx>0&&cur>0) go(tabs[cur-1]);
+  },{passive:true});
+})();
+
+// ===== INTERSECTION OBSERVER =====
+if('IntersectionObserver' in window) {
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting) en.target.style.animationPlayState='running';
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.fade-in').forEach(function(el){
+    el.style.animationPlayState='paused'; obs.observe(el);
+  });
+}
+</script>
+</body>
+</html>
