@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#022B3A">
 <meta name="apple-mobile-web-app-title" content="鳥取視察">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi6bOl5Y+W5biC6KaW5a+f44OE44Ki44O8IiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAyMkIzQSIsInRoZW1lX2NvbG9yIjoiIzAyMkIzQSIsInN0YXJ0X3VybCI6Ii4ifQ==">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi6bOl5Y+W5biC6KaW5a+f44OE44Ki44O8IiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAyMkIzQSIsInRoZW1lX2NvbG9yIjoiIzAyMkIzQSJ9">
 <title>鳥取市視察ツアー</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -84,6 +84,25 @@ body.loaded { opacity:1; }
 .hd-text { flex:1; min-width:0; }
 .hd-text h1 { font-size:.72rem; font-weight:700; letter-spacing:.3px; line-height:1.35; }
 .hd-text p { font-size:.55rem; font-weight:400; opacity:.4; margin-top:1px; letter-spacing:.6px; }
+.hd-photo {
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:10px;
+  background:rgba(255,255,255,.15); color:#fff; font-size:.75rem;
+  text-decoration:none; flex-shrink:0; transition:background .2s;
+}
+.hd-photo:active { background:rgba(255,255,255,.3); }
+/* photo share card */
+.photo-card {
+  margin:20px 16px; padding:18px 20px; border-radius:14px;
+  background:linear-gradient(135deg,#ff9800,#ff5722);
+  color:#fff; text-align:center; text-decoration:none; display:block;
+  box-shadow:0 4px 16px rgba(255,87,34,.25);
+  transition:transform .2s;
+}
+.photo-card:active { transform:scale(.97); }
+.photo-card i.cam { font-size:1.5rem; margin-bottom:8px; display:block; }
+.photo-card strong { font-size:.72rem; display:block; margin-bottom:4px; }
+.photo-card span { font-size:.54rem; opacity:.85; }
 
 /* ===== BOTTOM TAB ===== */
 .tb {
@@ -269,7 +288,7 @@ body.loaded { opacity:1; }
   transition:max-height .35s cubic-bezier(.4,0,.2,1), margin .35s ease, opacity .25s ease;
   opacity:0;
 }
-.tc.open .tc-detail { max-height:350px; margin-top:10px; opacity:1; }
+.tc.open .tc-detail { max-height:500px; margin-top:10px; opacity:1; }
 .tc-detail-inner {
   padding-top:10px; border-top:1px solid var(--border-light);
   font-size:.66rem; color:var(--ink3); line-height:1.7;
@@ -278,6 +297,7 @@ body.loaded { opacity:1; }
   display:flex; align-items:center; gap:5px; margin-bottom:5px; font-weight:500;
 }
 .tc-loc i { font-size:.55rem; color:var(--primary); }
+.tc-addr { font-size:.6rem; color:var(--ink3); margin-bottom:4px; padding-left:14px; }
 .tc-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
 .tc-action {
   display:inline-flex; align-items:center; gap:4px;
@@ -328,10 +348,6 @@ body.loaded { opacity:1; }
 .mc:active { transform:scale(.985); }
 .mc-bar { height:3px; background:linear-gradient(90deg,var(--primary),var(--primary-light),var(--accent-light)); }
 .mc-body { padding:14px 16px; position:relative; }
-.mc-wm {
-  position:absolute; right:4px; bottom:-4px;
-  font-size:3.2rem; opacity:.04; pointer-events:none; color:var(--primary);
-}
 .mc .co { font-size:.8rem; font-weight:700; line-height:1.35; color:var(--ink); }
 .mc .meta { display:flex; align-items:center; gap:10px; margin:5px 0 6px; flex-wrap:wrap; }
 .mc .meta span {
@@ -355,8 +371,202 @@ body.loaded { opacity:1; }
 }
 .mc .hp:active { background:var(--primary); color:#fff; transform:scale(.96); }
 .mc .hp i { font-size:.55rem; }
+.brand-tag {
+  display:inline-block; font-size:.48rem; font-weight:600;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff; padding:2px 8px; border-radius:4px; margin-left:6px;
+  letter-spacing:.5px; vertical-align:middle;
+}
 
+/* ===== MEMO ===== */
+.tc-memo {
+  margin-top:10px; padding-top:8px; border-top:1px dashed var(--border);
+}
+.memo-input {
+  width:100%; border:1.5px solid var(--border); border-radius:8px;
+  padding:8px 10px; font-size:.62rem; font-family:inherit;
+  resize:vertical; min-height:36px; max-height:120px;
+  color:var(--ink2); background:var(--surface-2);
+  transition:border-color .2s;
+}
+.memo-input:focus { outline:none; border-color:var(--primary); background:#fff; }
+.memo-input::placeholder { color:var(--ink4); }
+.memo-btns { display:flex; gap:8px; margin-top:6px; }
+.memo-save, .memo-send {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:5px 12px; font-size:.56rem; font-weight:600;
+  color:#fff; border:none; border-radius:6px;
+  cursor:pointer; transition:all .2s;
+}
+.memo-save { background:var(--ink3); }
+.memo-save:active { transform:scale(.95); background:var(--ink2); }
+.memo-save.saved { background:var(--success); }
+.memo-send { background:var(--accent); }
+.memo-send:active { transform:scale(.95); background:var(--accent-dark,#e07a00); }
+.memo-send.saved { background:var(--success); }
+/* company memo */
+.mc-memo {
+  margin-top:10px; padding-top:8px; border-top:1px dashed var(--border);
+}
+.mc-memo-label {
+  font-size:.54rem; font-weight:600; color:var(--ink3); margin-bottom:5px;
+}
+/* info tooltip */
+.memo-info-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:50%; border:1.5px solid var(--primary);
+  color:var(--primary); font-size:.5rem; font-weight:700; cursor:pointer;
+  background:var(--primary-bg); margin-left:6px; vertical-align:middle;
+  position:relative;
+}
+.memo-info-pop {
+  display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:#fff; color:var(--ink); font-size:.68rem; font-weight:500;
+  padding:20px 22px; border-radius:14px; width:280px; max-width:85vw; line-height:1.8;
+  box-shadow:0 8px 32px rgba(0,0,0,.18); z-index:9000; text-align:center;
+  border:2px solid var(--primary);
+}
+.memo-info-pop::before {
+  content:''; position:fixed; inset:0; background:rgba(0,0,0,.25);
+  z-index:-1; border-radius:0;
+}
+.memo-info-btn.open .memo-info-pop { display:block; }
+/* memo hint in cards */
+.memo-hint {
+  font-size:.5rem; color:var(--ink4); margin-bottom:6px; line-height:1.5;
+}
+.memo-hint i { color:var(--primary); margin-right:3px; }
+/* memo list color tags */
+.memo-tag-schedule {
+  font-size:.5rem; font-weight:600; padding:2px 8px; border-radius:4px;
+  background:var(--primary-bg); color:var(--primary);
+}
+.memo-tag-company {
+  font-size:.5rem; font-weight:600; padding:2px 8px; border-radius:4px;
+  background:rgba(255,152,0,.12); color:var(--accent);
+}
+.memo-card {
+  background:var(--surface); border-radius:var(--radius-sm);
+  padding:14px 16px; margin-bottom:10px;
+  border:1px solid var(--border-light); box-shadow:var(--shadow-sm);
+}
+.memo-card-header {
+  display:flex; align-items:center; gap:8px; margin-bottom:6px;
+}
+.memo-card-time {
+  font-size:.56rem; font-weight:700; color:var(--primary);
+  background:var(--primary-bg); padding:2px 8px; border-radius:4px;
+  flex-shrink:0;
+}
+.memo-card-name { font-size:.72rem; font-weight:700; color:var(--ink); }
+.memo-card-text {
+  font-size:.64rem; color:var(--ink2); line-height:1.7;
+  white-space:pre-wrap;
+}
+.memo-empty {
+  text-align:center; padding:40px 20px; color:var(--ink4);
+}
+.memo-empty i { font-size:2rem; margin-bottom:12px; display:block; opacity:.3; }
+.memo-empty p { font-size:.68rem; }
+.memo-day-label {
+  font-size:.58rem; font-weight:700; color:var(--ink3);
+  margin:16px 0 8px; letter-spacing:1px;
+}
+.memo-card-actions {
+  display:flex; gap:8px; margin-top:8px; padding-top:8px;
+  border-top:1px dashed var(--border-light);
+}
+.memo-card-edit, .memo-card-share {
+  font-size:.52rem; font-weight:600; padding:4px 10px;
+  border-radius:5px; border:none; cursor:pointer;
+  display:inline-flex; align-items:center; gap:3px; transition:all .2s;
+}
+.memo-card-edit { background:var(--surface-2); color:var(--ink3); }
+.memo-card-edit:active { background:var(--border); }
+.memo-card-share { background:none; color:var(--ink4); border:1px solid var(--border); }
+.memo-card-share:active { background:var(--primary-bg); color:var(--primary); }
+.memo-card-share.sent { color:var(--success); border-color:var(--success); }
 
+/* ===== SURVEY CARD ===== */
+.survey-card {
+  margin:12px 16px; padding:18px 20px; border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff; text-align:center; text-decoration:none; display:none;
+  box-shadow:0 4px 16px rgba(0,136,136,.25);
+}
+.survey-card strong { font-size:.72rem; display:block; margin:6px 0 4px; }
+.survey-card span { font-size:.54rem; opacity:.85; }
+.survey-card .cam { font-size:1.2rem; opacity:.8; }
+
+/* ===== NAME MODAL ===== */
+.name-modal {
+  position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,.45); backdrop-filter:blur(6px);
+  display:none; align-items:center; justify-content:center;
+  padding:20px; opacity:0; transition:opacity .3s;
+}
+.name-modal.show { opacity:1; }
+.name-modal-box {
+  background:#fff; border-radius:16px; padding:28px 24px;
+  width:100%; max-width:340px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  transform:translateY(20px); transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.name-modal.show .name-modal-box { transform:translateY(0); }
+.name-modal-box h3 { font-size:.85rem; font-weight:700; margin-bottom:4px; }
+.name-modal-box p { font-size:.6rem; color:var(--ink3); margin-bottom:16px; line-height:1.6; }
+.name-modal-select {
+  width:100%; border:2px solid var(--border); border-radius:10px;
+  padding:12px 14px; font-size:.72rem; font-family:inherit;
+  color:var(--ink); background:var(--surface-2);
+  transition:border-color .2s; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23666' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.name-modal-select:focus { outline:none; border-color:var(--primary); background:#fff; }
+.name-modal-select option[value=""] { color:var(--ink4); }
+.name-modal-input {
+  width:100%; border:2px solid var(--border); border-radius:10px;
+  padding:12px 14px; font-size:.8rem; font-family:inherit;
+  text-align:center; color:var(--ink); background:var(--surface-2);
+  transition:border-color .2s; margin-top:10px;
+}
+.name-modal-input:focus { outline:none; border-color:var(--primary); background:#fff; }
+.name-modal-input::placeholder { color:var(--ink4); }
+.name-modal-pin {
+  width:120px; border:2px solid var(--border); border-radius:10px;
+  padding:12px 14px; font-size:1.1rem; font-family:inherit;
+  text-align:center; color:var(--ink); background:var(--surface-2);
+  transition:border-color .2s; letter-spacing:8px; margin:10px auto 0;
+  display:block;
+}
+.name-modal-pin:focus { outline:none; border-color:var(--primary); background:#fff; }
+.name-modal-pin::placeholder { color:var(--ink4); letter-spacing:0; font-size:.65rem; }
+.name-modal-pin-hint {
+  font-size:.52rem; color:var(--ink4); margin-top:6px; text-align:center;
+}
+.name-modal-error {
+  font-size:.56rem; color:#e53935; margin-top:8px; text-align:center; font-weight:600;
+}
+.name-modal-btn {
+  margin-top:14px; width:100%; padding:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff; border:none; border-radius:10px;
+  font-size:.75rem; font-weight:700; font-family:inherit;
+  cursor:pointer; transition:all .2s;
+}
+.name-modal-btn:active { transform:scale(.97); }
+.name-modal-btn:disabled { opacity:.4; }
+
+/* user name badge in header */
+.hd-user {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:.52rem; font-weight:600; margin-top:4px;
+  background:rgba(255,255,255,.15); padding:3px 10px; border-radius:20px;
+  cursor:pointer; color:#fff;
+}
+.hd-user i { font-size:.45rem; }
+.hd-user .logout-icon { opacity:.6; margin-left:2px; }
 
 /* ===== TOAST ===== */
 .toast {
@@ -410,6 +620,7 @@ body.loaded { opacity:1; }
     <h1>地テレ共創ハブ 鳥取市視察ツアー</h1>
     <p>TOTTORI INSPECTION TOUR 2026</p>
   </div>
+  <a class="hd-photo" href="https://drive.google.com/drive/folders/1zLKezACGYrwt4h32An7Se4kofYXBbqXk" target="_blank" rel="noopener" title="写真を共有"><i class="fa-solid fa-camera"></i></a>
 </header>
 
 <!-- Bottom Tab -->
@@ -418,7 +629,45 @@ body.loaded { opacity:1; }
   <a class="on" data-tab="d1" onclick="go('d1')"><i class="fa-solid fa-calendar-day"></i><span>3/5 Thu</span></a>
   <a data-tab="d2" onclick="go('d2')"><i class="fa-solid fa-calendar-day"></i><span>3/6 Fri</span></a>
   <a data-tab="mb" onclick="go('mb')"><i class="fa-solid fa-building"></i><span>参加企業</span></a>
+  <a data-tab="memo" onclick="go('memo')"><i class="fa-solid fa-pen-to-square"></i><span>メモ</span></a>
 </nav>
+
+<!-- Name Modal -->
+<div class="name-modal" id="nameModal">
+  <div class="name-modal-box">
+    <h3>ようこそ！</h3>
+    <p>参加者のお名前を選択してください</p>
+    <select class="name-modal-select" id="nameSelect">
+      <option value="" disabled selected>お名前を選択…</option>
+      <option value="齋藤 隆太">齋藤 隆太</option>
+      <option value="山崎 孝一郎">山崎 孝一郎</option>
+      <option value="小坪 拓也">小坪 拓也</option>
+      <option value="尾田 尚子">尾田 尚子</option>
+      <option value="中島 幹彰">中島 幹彰</option>
+      <option value="石川 淳一">石川 淳一</option>
+      <option value="奥山 幸佑">奥山 幸佑</option>
+      <option value="坪谷 亮">坪谷 亮</option>
+      <option value="渋谷 雄大">渋谷 雄大</option>
+      <option value="城間 健市郎">城間 健市郎</option>
+      <option value="福島 大徳">福島 大徳</option>
+      <option value="垣原 将志">垣原 将志</option>
+      <option value="髙木 亮輔">髙木 亮輔</option>
+      <option value="浜本 祐樹">浜本 祐樹</option>
+      <option value="山根 雄紀">山根 雄紀</option>
+      <option value="山根 裕史">山根 裕史</option>
+      <option value="西尾 俊樹">西尾 俊樹</option>
+      <option value="手嶋 航太郎">手嶋 航太郎</option>
+      <option value="浅香 豪">浅香 豪</option>
+      <option value="齊藤 志歩">齊藤 志歩</option>
+      <option value="__other__">その他（手入力）</option>
+    </select>
+    <input type="text" class="name-modal-input" id="nameInput" placeholder="お名前を入力…" style="display:none" autocomplete="name">
+    <input type="tel" class="name-modal-pin" id="namePin" placeholder="4桁のPIN" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+    <p class="name-modal-pin-hint" id="pinHint">メモを保護する4桁のPINを設定してください<br>※ 一度設定すると変更できません。2日間同じPINをご使用ください</p>
+    <button class="name-modal-btn" id="nameBtn" onclick="submitName()" disabled>はじめる</button>
+    <p class="name-modal-error" id="nameError" style="display:none"></p>
+  </div>
+</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -445,13 +694,13 @@ body.loaded { opacity:1; }
           <div class="tc-main">
             <div class="time">10:45</div>
             <div class="name">鳥取空港 到着</div>
-            <div class="dur">15分</div>
           </div>
           <span class="em"><i class="fa-solid fa-plane-arrival"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-addr">〒680-0947 鳥取市湖山町西4丁目110-5</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -459,20 +708,20 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="ti fade-in stagger-3" data-time="11:00" data-end="11:40" data-date="2026-03-05" data-id="d1-2">
+    <div class="ti fade-in stagger-3" data-time="11:00" data-end="11:25" data-date="2026-03-05" data-id="d1-2">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">11:00</div>
             <div class="name">オリエンテーション</div>
-            <div class="dur">40分</div>
           </div>
           <span class="em"><i class="fa-solid fa-clipboard-list"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-addr">〒680-0947 鳥取市湖山町西4丁目110-6</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -480,22 +729,22 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約10分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-4" data-time="11:40" data-end="13:00" data-date="2026-03-05" data-id="d1-3">
+    <div class="ti fade-in stagger-4" data-time="11:40" data-end="12:45" data-date="2026-03-05" data-id="d1-3">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">11:40</div>
-            <div class="name">国立大学法人鳥取大学</div>
-            <div class="dur">1時間</div>
+            <div class="name">国立大学法人鳥取大学 訪問</div>
           </div>
           <span class="em"><i class="fa-solid fa-graduation-cap"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
-          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取大学キャンパス</div>
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取大学</div>
+          <div class="tc-addr">〒680-8550 鳥取市湖山町南4丁目101番地</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取大学" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -503,41 +752,45 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="ti fade-in stagger-5" data-time="13:00" data-end="14:15" data-date="2026-03-05" data-id="d1-4">
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
+
+    <div class="ti fade-in stagger-5" data-time="13:00" data-end="14:00" data-date="2026-03-05" data-id="d1-4">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">13:00</div>
             <div class="name">昼食</div>
-            <div class="dur">1時間15分</div>
           </div>
           <span class="em"><i class="fa-solid fa-utensils"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>たくみ珈琲店</div>
+          <div class="tc-addr">〒680-0831 鳥取県鳥取市栄町606 まるもビル 1F</div>
           <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=たくみ珈琲店+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-6" data-time="14:15" data-end="14:45" data-date="2026-03-05" data-id="d1-5">
+    <div class="ti fade-in stagger-6" data-time="14:15" data-end="14:35" data-date="2026-03-05" data-id="d1-5">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">14:15</div>
             <div class="name">鳥取砂丘</div>
-            <div class="dur">30分</div>
           </div>
           <span class="em"><i class="fa-solid fa-mountain-sun"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘</div>
+          <div class="tc-addr">〒689-0105 鳥取県鳥取市福部町湯山2083-17</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -545,20 +798,24 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
+
     <div class="ti fade-in stagger-7" data-time="14:45" data-end="15:15" data-date="2026-03-05" data-id="d1-6">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">14:45</div>
-            <div class="name">（株）skyer 訪問</div>
-            <div class="dur">30分</div>
+            <div class="name">株式会社skyer 訪問</div>
           </div>
           <span class="em"><i class="fa-solid fa-helicopter"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>SANDBOX</div>
+          <div class="tc-addr">〒680-0001 鳥取県鳥取市浜坂1390-224</div>
           <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=SANDBOX+鳥取+浜坂" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
@@ -570,63 +827,91 @@ body.loaded { opacity:1; }
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">15:15</div>
-            <div class="name">参加自治体紹介（鳥取県、鳥取市、倉吉市）</div>
-            <div class="dur">1時間</div>
+            <div class="name">参加自治体紹介（鳥取県・鳥取市・倉吉市）</div>
           </div>
           <span class="em"><i class="fa-solid fa-flag"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>SANDBOX</div>
+          <div class="tc-addr">〒680-0001 鳥取県鳥取市浜坂1390-225</div>
           <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=SANDBOX+鳥取+浜坂" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="ti fade-in stagger-9" data-time="16:15" data-end="18:30" data-date="2026-03-05" data-id="d1-8">
+    <div class="ti fade-in stagger-9" data-time="16:15" data-end="18:00" data-date="2026-03-05" data-id="d1-8">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">16:15</div>
             <div class="name">テレワーク＆意見交換</div>
-            <div class="dur">2時間15分</div>
           </div>
           <span class="em"><i class="fa-solid fa-comments"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>SANDBOX</div>
+          <div class="tc-addr">〒680-0001 鳥取県鳥取市浜坂1390-226</div>
           <div class="tc-actions">
-            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=SANDBOX+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=SANDBOX+鳥取+浜坂" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-person-walking"></i>会場移動</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-9" data-time="18:30" data-end="20:30" data-date="2026-03-05" data-id="d1-9">
+    <div class="ti fade-in stagger-9" data-time="18:10" data-end="18:30" data-date="2026-03-05" data-id="d1-9">
+      <div class="ti-dot"></div>
+      <div class="tc" onclick="toggleCard(this)">
+        <div class="tc-top">
+          <div class="tc-main">
+            <div class="time">18:10</div>
+            <div class="name">ホテルチェックイン</div>
+          </div>
+          <span class="em"><i class="fa-solid fa-hotel"></i></span>
+        </div>
+        <i class="fa-solid fa-chevron-down tc-chevron"></i>
+        <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>ホテルグリーモーリス</div>
+          <div class="tc-addr">〒680-0822 鳥取県鳥取市今町2-107</div>
+          <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=ホテルグリーンモーリス+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ti fade-in stagger-9" data-time="18:30" data-end="20:30" data-date="2026-03-05" data-id="d1-10">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">18:30</div>
             <div class="name">懇親会</div>
-            <div class="dur">2時間</div>
           </div>
           <span class="em"><i class="fa-solid fa-champagne-glasses"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
-          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>グラッチェ</div>
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>ぐらっちぇ</div>
+          <div class="tc-addr">〒680-0833 鳥取市末広温泉町271-4 かわとビル</div>
           <div class="tc-actions">
-            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=グラッチェ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=ぐらっちぇ+鳥取+末広温泉町" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
   </div>
+  <a class="photo-card fade-in" href="https://drive.google.com/drive/folders/1zLKezACGYrwt4h32An7Se4kofYXBbqXk" target="_blank" rel="noopener">
+    <i class="fa-solid fa-camera cam"></i>
+    <strong>写真を共有する</strong>
+    <span>ツアーの写真をGoogleドライブにアップロード</span>
+  </a>
 </div>
 
 
@@ -648,77 +933,81 @@ body.loaded { opacity:1; }
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">09:30</div>
-            <div class="name">（株）まるにわ 訪問</div>
-            <div class="dur">1時間10分</div>
+            <div class="name">株式会社まるにわ 訪問</div>
           </div>
           <span class="em"><i class="fa-solid fa-house-chimney"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>株式会社まるにわ</div>
+          <div class="tc-addr">〒680-0831 鳥取県鳥取市栄町627</div>
           <div class="tc-actions">
-            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=まるにわ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=株式会社まるにわ+鳥取+栄町" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約20分</div>
-
-    <div class="ti fade-in stagger-2" data-time="10:40" data-end="11:30" data-date="2026-03-06" data-id="d2-2">
+    <div class="ti fade-in stagger-2" data-time="10:40" data-end="11:10" data-date="2026-03-06" data-id="d2-2">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">10:40</div>
-            <div class="name">カトカミ 視察</div>
-            <div class="dur">50分</div>
+            <div class="name">カトカミ 訪問</div>
           </div>
-          <span class="em"><i class="fa-solid fa-scissors"></i></span>
+          <span class="em"><i class="fa-solid fa-scroll"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>カトカミ</div>
+          <div class="tc-addr">〒680-0831 鳥取県鳥取市栄町609</div>
           <div class="tc-actions">
-            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=カトカミ+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=カトカミ+鳥取+栄町" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="ti fade-in stagger-3" data-time="11:30" data-end="12:40" data-date="2026-03-06" data-id="d2-3">
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
+
+    <div class="ti fade-in stagger-3" data-time="11:30" data-end="12:30" data-date="2026-03-06" data-id="d2-3">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">11:30</div>
             <div class="name">昼食</div>
-            <div class="dur">1時間10分</div>
           </div>
           <span class="em"><i class="fa-solid fa-utensils"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>アートプレイスすなば珈琲</div>
+          <div class="tc-addr">〒680-0017 鳥取県鳥取市尚徳町101-5</div>
           <div class="tc-actions">
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=すなば珈琲+鳥取+尚徳町" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-4" data-time="12:40" data-end="14:00" data-date="2026-03-06" data-id="d2-4">
+    <div class="ti fade-in stagger-4" data-time="12:40" data-end="13:45" data-date="2026-03-06" data-id="d2-4">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">12:40</div>
-            <div class="name">（株）鳥取銀行 訪問</div>
-            <div class="dur">1時間20分</div>
+            <div class="name">株式会社鳥取銀行 訪問</div>
           </div>
           <span class="em"><i class="fa-solid fa-landmark"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
-          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取銀行 本店</div>
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>株式会社鳥取銀行</div>
+          <div class="tc-addr">〒680-0834 鳥取県鳥取市永楽温泉町171番地</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取銀行+本店" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -726,29 +1015,30 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約10分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-5" data-time="14:00" data-end="15:15" data-date="2026-03-06" data-id="d2-5">
+    <div class="ti fade-in stagger-5" data-time="14:00" data-end="15:00" data-date="2026-03-06" data-id="d2-5">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">14:00</div>
-            <div class="name">（株）LIMNO 訪問</div>
-            <div class="dur">1時間15分</div>
+            <div class="name">株式会社LIMNO 訪問</div>
           </div>
           <span class="em"><i class="fa-solid fa-bolt"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>株式会社LIMNO</div>
+          <div class="tc-addr">〒680-8634 鳥取県鳥取市立川町7丁目101番地</div>
           <div class="tc-actions">
-            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=LIMNO+鳥取" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
+            <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取県鳥取市立川町7丁目101" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>バス移動 約15分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
     <div class="ti fade-in stagger-6" data-time="15:15" data-end="17:15" data-date="2026-03-06" data-id="d2-6">
       <div class="ti-dot"></div>
@@ -756,14 +1046,14 @@ body.loaded { opacity:1; }
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">15:15</div>
-            <div class="name">鳥取市役所にて意見交換</div>
-            <div class="dur">2時間</div>
+            <div class="name">意見交換（内閣府・鳥取県・鳥取市・倉吉市）</div>
           </div>
           <span class="em"><i class="fa-solid fa-handshake"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取市役所</div>
+          <div class="tc-addr">〒680-8571 鳥取県鳥取市幸町71番地</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取市役所" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -771,20 +1061,20 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="ti fade-in stagger-7" data-time="17:15" data-end="17:50" data-date="2026-03-06" data-id="d2-7">
+    <div class="ti fade-in stagger-7" data-time="17:15" data-end="17:30" data-date="2026-03-06" data-id="d2-7">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
             <div class="time">17:15</div>
             <div class="name">クロージング</div>
-            <div class="dur">35分</div>
           </div>
           <span class="em"><i class="fa-solid fa-trophy"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
-          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取市</div>
+          <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取市役所</div>
+          <div class="tc-addr">〒680-8571 鳥取県鳥取市幸町71番地</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取市役所" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
@@ -792,46 +1082,39 @@ body.loaded { opacity:1; }
       </div>
     </div>
 
-    <div class="travel"><i class="fa-solid fa-bus"></i>空港へ移動 約25分</div>
+    <div class="travel"><i class="fa-solid fa-bus"></i>移動</div>
 
-    <div class="ti fade-in stagger-8" data-time="17:50" data-end="18:35" data-date="2026-03-06" data-id="d2-8">
+    <div class="ti fade-in stagger-8" data-time="18:00" data-end="19:00" data-date="2026-03-06" data-id="d2-8">
       <div class="ti-dot"></div>
       <div class="tc" onclick="toggleCard(this)">
         <div class="tc-top">
           <div class="tc-main">
-            <div class="time">17:50</div>
-            <div class="name">鳥取空港 到着</div>
-            <div class="dur">45分</div>
+            <div class="time">18:00</div>
+            <div class="name">鳥取空港 着</div>
           </div>
-          <span class="em"><i class="fa-solid fa-car"></i></span>
+          <span class="em"><i class="fa-solid fa-plane-departure"></i></span>
         </div>
         <i class="fa-solid fa-chevron-down tc-chevron"></i>
         <div class="tc-detail"><div class="tc-detail-inner">
           <div class="tc-loc"><i class="fa-solid fa-location-dot"></i>鳥取砂丘コナン空港</div>
+          <div class="tc-addr">〒680-0947 鳥取市湖山町西4丁目110-5</div>
           <div class="tc-actions">
             <a class="tc-action map" href="https://www.google.com/maps/search/?api=1&query=鳥取砂丘コナン空港" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i>地図</a>
           </div>
         </div></div>
       </div>
     </div>
-
-    <div class="ti fade-in stagger-9" data-time="18:35" data-end="20:00" data-date="2026-03-06" data-id="d2-9">
-      <div class="ti-dot"></div>
-      <div class="tc" onclick="toggleCard(this)">
-        <div class="tc-top">
-          <div class="tc-main">
-            <div class="time">18:35</div>
-            <div class="name">鳥取空港 離陸</div>
-          </div>
-          <span class="em"><i class="fa-solid fa-plane-departure"></i></span>
-        </div>
-        <i class="fa-solid fa-chevron-down tc-chevron"></i>
-        <div class="tc-detail"><div class="tc-detail-inner">
-          ANA298便
-        </div></div>
-      </div>
-    </div>
   </div>
+  <a class="photo-card fade-in" href="https://drive.google.com/drive/folders/1zLKezACGYrwt4h32An7Se4kofYXBbqXk" target="_blank" rel="noopener">
+    <i class="fa-solid fa-camera cam"></i>
+    <strong>写真を共有する</strong>
+    <span>ツアーの写真をGoogleドライブにアップロード</span>
+  </a>
+  <a class="survey-card fade-in" id="surveyCard" href="#" target="_blank" rel="noopener">
+    <i class="fa-solid fa-clipboard-check cam"></i>
+    <strong>アンケートにご協力ください</strong>
+    <span>ツアーのご感想をお聞かせください（所要時間：約3分）</span>
+  </a>
 </div>
 
 
@@ -845,10 +1128,9 @@ body.loaded { opacity:1; }
     </div>
   </div>
 
-
   <div class="mc fade-in stagger-2">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-rotate mc-wm"></i>
+
       <div class="co">株式会社ライトライト</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>宮崎県宮崎市</span><span><i class="fa-solid fa-user"></i>齋藤 隆太 様</span></div>
       <span class="role-badge">代表取締役</span>
@@ -860,20 +1142,18 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-3">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-gem mc-wm"></i>
       <div class="co">株式会社CRAFTING JAPAN</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>神奈川県横浜市</span><span><i class="fa-solid fa-user"></i>山崎 孝一郎 様</span></div>
       <span class="role-badge">取締役</span>
       <div class="ds">日本の工芸・ものづくり文化を次世代につなぐブランド事業を展開。百貨店・商業施設と連携した工芸品のプロモーションやイベント企画を手がけ、食・観光・工芸・アートを横断し地域の価値を全国へ届ける地域商社。</div>
 
-      <a class="hp" href="https://craftingjapan.stores.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
+      <a class="hp" href="https://www.craftingjapan.jp/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i>HP を見る</a>
     </div>
   </div>
 
   <div class="mc fade-in stagger-4">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-heart mc-wm"></i>
-      <div class="co">株式会社river（官民共創支援組織）</div>
+      <div class="co">株式会社river <span class="brand-tag">官民共創支援組織</span></div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都品川区</span><span><i class="fa-solid fa-user"></i>小坪 拓也 様</span></div>
       <span class="role-badge">代表取締役</span>
       <div class="ds">企業版ふるさと納税サービス「キフゲート」を運営。自治体・企業ネットワークと政府方針のナレッジで地域課題解決をトータルコーディネート。内閣府「地テレ共創ハブ」以外にも多数の省庁連携プラットフォームに参画。</div>
@@ -884,7 +1164,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-5">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-display mc-wm"></i>
       <div class="co">株式会社aubeBiz</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>尾田 尚子 様</span></div>
       <span class="role-badge">広報部 / 地方創生部</span>
@@ -896,7 +1175,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-6">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-bicycle mc-wm"></i>
       <div class="co">コギコギ株式会社</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>中島 幹彰 様</span></div>
       <span class="role-badge">CEO</span>
@@ -908,7 +1186,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-7">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-calculator mc-wm"></i>
       <div class="co">メリービズ株式会社</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都渋谷区</span><span><i class="fa-solid fa-user"></i>石川 淳一 様</span></div>
       <span class="role-badge">社長室 室長</span>
@@ -920,7 +1197,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-8">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-share-nodes mc-wm"></i>
       <div class="co">株式会社EmpaC</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都品川区</span><span><i class="fa-solid fa-user"></i>奥山 幸佑 様</span></div>
       <span class="role-badge">Sales Manager</span>
@@ -932,7 +1208,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-9">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-piggy-bank mc-wm"></i>
       <div class="co">FPサテライト株式会社</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都</span><span><i class="fa-solid fa-user"></i>坪谷 亮 様</span></div>
       <span class="role-badge">代表取締役</span>
@@ -944,7 +1219,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-9">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-chalkboard-user mc-wm"></i>
       <div class="co">株式会社MOVED</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都大田区 / 新潟県</span><span><i class="fa-solid fa-user"></i>渋谷 雄大 様</span></div>
       <span class="role-badge">代表取締役</span>
@@ -956,7 +1230,6 @@ body.loaded { opacity:1; }
 
   <div class="mc fade-in stagger-9">
     <div class="mc-bar"></div><div class="mc-body">
-      <i class="fa-solid fa-couch mc-wm"></i>
       <div class="co">コクヨ株式会社</div>
       <div class="meta"><span><i class="fa-solid fa-location-dot"></i>東京都港区</span><span><i class="fa-solid fa-user"></i>城間 健市郎 様</span></div>
       <span class="role-badge">ソーシャルイノベーションG</span>
@@ -968,11 +1241,22 @@ body.loaded { opacity:1; }
 </div>
 
 
+<!-- ===== MEMO ===== -->
+<div id="memo" class="pg">
+  <div class="mh fade-in">
+    <div class="mh-ic" style="background:linear-gradient(135deg,var(--accent),var(--accent-light))"><i class="fa-solid fa-pen-to-square"></i></div>
+    <div>
+      <strong>マイメモ<span class="memo-info-btn" onclick="this.classList.toggle('open');event.stopPropagation()"><i class="fa-solid fa-info"></i><span class="memo-info-pop">各コンテンツでの気付きや事務局への接続依頼など記載ください。送信を押さない限りメモはご自身のみ閲覧可能です。</span></span></strong>
+      <span>あなたが保存したメモ</span>
+    </div>
+  </div>
+  <div id="memoList"></div>
+</div>
 
 
 <script>
 // ===== STATE =====
-var tabs = ['d1','d2','mb'], cur = 0;
+var tabs = ['d1','d2','mb','memo'], cur = 0;
 // ===== INIT =====
 window.addEventListener('load', function() {
   document.body.classList.add('loaded');
@@ -984,6 +1268,10 @@ window.addEventListener('load', function() {
   updateTabIndicator();
   updateTimeline();
   setInterval(updateTimeline, 60000);
+  checkUserName();
+  initMemos();
+  initCompanyMemos();
+  showSurveyIfDay2();
 });
 
 // ===== TAB NAV =====
@@ -996,6 +1284,7 @@ function go(id) {
   cur = tabs.indexOf(id);
   if(cur>=0) document.querySelectorAll('.tb a')[cur].classList.add('on');
   updateTabIndicator();
+  if(id==='memo') renderMemoList();
   window.scrollTo({top:0, behavior:'smooth'});
   pg.querySelectorAll('.fade-in').forEach(function(el){
     el.style.animation='none'; el.offsetHeight; el.style.animation='';
@@ -1065,6 +1354,9 @@ window.addEventListener('scroll', function(){
   document.getElementById('scrollProg').style.width = p+'%';
 },{passive:true});
 
+// ===== CLOSE INFO POPUP =====
+document.addEventListener('click', function(){ document.querySelectorAll('.memo-info-btn.open').forEach(function(b){b.classList.remove('open');}); });
+
 // ===== SWIPE =====
 (function(){
   var sx=0,sy=0,ok=false;
@@ -1092,6 +1384,451 @@ if('IntersectionObserver' in window) {
     el.style.animationPlayState='paused'; obs.observe(el);
   });
 }
+
+// ===== MEMO (Google Sheets) =====
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzXJfIiOjgRAayqbX-TVIcP3F6xI5VIpV8lcR5pqdtFh1d7BQf21sDe6RAfHlJiZVXcwg/exec';
+var USER_KEY = 'tottori-tour-user';
+var PIN_KEY = 'tottori-tour-pin';
+
+function getUserName() {
+  return localStorage.getItem(USER_KEY) || '';
+}
+function getUserPin() {
+  return localStorage.getItem(PIN_KEY) || '';
+}
+
+function checkUserName() {
+  var name = getUserName();
+  if(!name) {
+    var modal = document.getElementById('nameModal');
+    modal.style.display = 'flex';
+    setTimeout(function(){ modal.classList.add('show'); }, 10);
+    var sel = document.getElementById('nameSelect');
+    var inp = document.getElementById('nameInput');
+    var pin = document.getElementById('namePin');
+    var btn = document.getElementById('nameBtn');
+    function validateForm() {
+      var hasName = sel.value === '__other__' ? inp.value.trim() : sel.value;
+      var hasPin = pin.value.length === 4;
+      btn.disabled = !(hasName && hasPin);
+    }
+    sel.addEventListener('change', function(){
+      if(this.value === '__other__') {
+        inp.style.display = 'block';
+        inp.focus();
+      } else {
+        inp.style.display = 'none';
+      }
+      validateForm();
+    });
+    inp.addEventListener('input', validateForm);
+    pin.addEventListener('input', function(){
+      this.value = this.value.replace(/[^0-9]/g,'');
+      validateForm();
+    });
+  } else {
+    updateHeaderUser(name);
+    syncMemos(name);
+  }
+}
+
+function submitName() {
+  var select = document.getElementById('nameSelect');
+  var input = document.getElementById('nameInput');
+  var pinInput = document.getElementById('namePin');
+  var name = select.value === '__other__' ? input.value.trim() : select.value;
+  var pin = pinInput.value;
+  if(!name || pin.length !== 4) return;
+  var err = document.getElementById('nameError');
+  if(err) err.style.display = 'none';
+  // Check existing local data
+  var raw = getLocalMemos();
+  if(raw._owner === name && raw._pin && raw._pin !== pin) {
+    // Same name but WRONG PIN → reject login, keep data safe
+    if(err) {
+      err.textContent = 'PINが一致しません。最初に設定したPINを入力してください。';
+      err.style.display = 'block';
+    }
+    return;
+  }
+  // Restore or clear
+  if(raw._owner === name && raw._pin === pin) {
+    // Same user, same PIN → restore local memos
+    document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+      var k = ta.getAttribute('data-key');
+      if(raw[k]) ta.value = raw[k];
+    });
+  } else if(raw._owner && raw._owner !== name) {
+    // Different user → clear old data
+    localStorage.removeItem(LOCAL_MEMO_KEY);
+    clearAllMemoFields();
+  }
+  // Set new user
+  localStorage.setItem(USER_KEY, name);
+  localStorage.setItem(PIN_KEY, pin);
+  var modal = document.getElementById('nameModal');
+  modal.classList.remove('show');
+  setTimeout(function(){ modal.style.display='none'; }, 300);
+  updateHeaderUser(name);
+  syncMemos(name);
+  showToast(name + 'さん、ようこそ！');
+  // Register PIN in background
+  fetch(GAS_URL + '?action=verify&name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin)).catch(function(){});
+}
+
+function updateHeaderUser(name) {
+  var hdText = document.querySelector('.hd-text');
+  var existing = hdText.querySelector('.hd-user');
+  if(existing) existing.remove();
+  var span = document.createElement('div');
+  span.className = 'hd-user';
+  span.style.cursor = 'pointer';
+  span.innerHTML = '<i class="fa-solid fa-user"></i> ' + name + ' <i class="fa-solid fa-right-from-bracket logout-icon"></i>';
+  span.onclick = function(){ logoutUser(); };
+  hdText.appendChild(span);
+}
+
+function clearAllMemoFields() {
+  document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+    ta.value = '';
+  });
+}
+
+function logoutUser() {
+  // Show custom confirm dialog (non-blocking)
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#fff;border-radius:16px;padding:24px 28px;text-align:center;max-width:280px;width:85vw;box-shadow:0 8px 32px rgba(0,0,0,.2);';
+  box.innerHTML = '<p style="font-size:.82rem;font-weight:600;margin-bottom:16px;">ログアウトしますか？</p>' +
+    '<div style="display:flex;gap:10px;justify-content:center;">' +
+    '<button id="logoutCancel" style="flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#f5f5f5;font-size:.72rem;font-weight:600;cursor:pointer;">キャンセル</button>' +
+    '<button id="logoutOk" style="flex:1;padding:10px;border-radius:10px;border:none;background:#EF4444;color:#fff;font-size:.72rem;font-weight:600;cursor:pointer;">ログアウト</button>' +
+    '</div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  document.getElementById('logoutCancel').onclick = function(){ overlay.remove(); };
+  document.getElementById('logoutOk').onclick = function(){
+    overlay.remove();
+    doLogout();
+  };
+}
+function doLogout() {
+  // Keep LOCAL_MEMO_KEY (has _owner/_pin embedded) for same-user re-login
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(PIN_KEY);
+  clearAllMemoFields();
+  var existing = document.querySelector('.hd-user');
+  if(existing) existing.remove();
+  // Reset modal form
+  var sel = document.getElementById('nameSelect');
+  var inp = document.getElementById('nameInput');
+  var pin = document.getElementById('namePin');
+  var btn = document.getElementById('nameBtn');
+  var err = document.getElementById('nameError');
+  if(sel) sel.selectedIndex = 0;
+  if(inp) { inp.value = ''; inp.style.display = 'none'; }
+  if(pin) pin.value = '';
+  if(btn) { btn.disabled = true; btn.textContent = 'はじめる'; }
+  if(err) err.style.display = 'none';
+  checkUserName();
+}
+
+// ===== MEMO ENCRYPTION =====
+function encryptMemo(text, pin) {
+  var encoded = encodeURIComponent(text);
+  var r = '';
+  for(var i=0;i<encoded.length;i++) r += String.fromCharCode(encoded.charCodeAt(i) ^ pin.charCodeAt(i % pin.length));
+  return btoa(r);
+}
+function decryptMemo(b64, pin) {
+  try {
+    var d = atob(b64), r = '';
+    for(var i=0;i<d.length;i++) r += String.fromCharCode(d.charCodeAt(i) ^ pin.charCodeAt(i % pin.length));
+    return decodeURIComponent(r);
+  } catch(e) { return b64; }
+}
+
+var NO_MEMO = ['d1-1','d1-9','d2-8'];
+var LOCAL_MEMO_KEY = 'tottori-tour-local-memos';
+
+function getLocalMemos() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_MEMO_KEY)) || {}; } catch(e) { return {}; }
+}
+
+function initMemos() {
+  var saved = getUserName() ? getLocalMemos() : {};
+  document.querySelectorAll('.ti[data-id]').forEach(function(ti) {
+    var id = ti.getAttribute('data-id');
+    if(NO_MEMO.indexOf(id) !== -1) return;
+    var detail = ti.querySelector('.tc-detail-inner');
+    if(!detail) return;
+    var div = document.createElement('div');
+    div.className = 'tc-memo';
+    div.onclick = function(e) { e.stopPropagation(); };
+    var val = saved[id] || '';
+    div.innerHTML = '<div class="memo-hint"><i class="fa-solid fa-circle-info"></i>送信を押さない限りメモはご自身のみ閲覧可能です</div>' +
+      '<textarea class="memo-input" data-key="'+id+'" id="memo-'+id+'" placeholder="気付きや事務局への接続依頼など…" rows="2">'+esc(val)+'</textarea>' +
+      '<div class="memo-btns">' +
+      '<button class="memo-save" onclick="saveLocal(\''+id+'\',this)"><i class="fa-solid fa-bookmark"></i> 自身のメモに保存</button>' +
+      '<button class="memo-send" onclick="sendMemo(\''+id+'\',this)"><i class="fa-solid fa-paper-plane"></i> 事務局へ送信</button>' +
+      '</div>';
+    detail.appendChild(div);
+  });
+}
+
+function initCompanyMemos() {
+  var saved = getUserName() ? getLocalMemos() : {};
+  document.querySelectorAll('.mc-body').forEach(function(body) {
+    var coEl = body.querySelector('.co');
+    if(!coEl) return;
+    var coName = coEl.textContent.replace(/\s+/g,' ').trim();
+    var key = 'co-' + coName;
+    var div = document.createElement('div');
+    div.className = 'mc-memo';
+    div.innerHTML = '<div class="mc-memo-label"><i class="fa-solid fa-handshake"></i> 連携メモ</div>' +
+      '<div class="memo-hint"><i class="fa-solid fa-circle-info"></i>送信を押さない限りメモはご自身のみ閲覧可能です</div>' +
+      '<textarea class="memo-input" data-key="'+esc(key)+'" id="memo-'+key.replace(/[^a-zA-Z0-9\u3000-\u9FFF-]/g,'')+'" placeholder="一緒にやりたいこと、聞きたいことなど…" rows="2">'+esc(saved[key]||'')+'</textarea>' +
+      '<div class="memo-btns">' +
+      '<button class="memo-save" onclick="saveLocal(\''+esc(key)+'\',this)"><i class="fa-solid fa-bookmark"></i> 自身のメモに保存</button>' +
+      '<button class="memo-send" onclick="sendCompanyMemo(\''+esc(coName)+'\',this)"><i class="fa-solid fa-paper-plane"></i> 事務局へ送信</button>' +
+      '</div>';
+    body.appendChild(div);
+  });
+}
+
+function saveLocal(id, btn) {
+  var textarea = btn.closest('.tc-memo, .mc-memo').querySelector('.memo-input');
+  var text = textarea.value.trim();
+  if(!text) { showToast('メモを入力してください'); return; }
+  var saved = getLocalMemos();
+  saved[id] = text;
+  saved._owner = getUserName();
+  saved._pin = getUserPin();
+  localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
+  btn.classList.add('saved');
+  btn.innerHTML = '<i class="fa-solid fa-check"></i> 保存済';
+  showToast('メモを保存しました');
+  setTimeout(function(){ btn.classList.remove('saved'); btn.innerHTML = '<i class="fa-solid fa-bookmark"></i> 自身のメモに保存'; }, 1500);
+  // Cross-device sync: also save to GAS
+  var name = getUserName();
+  if(name) {
+    var spot = id;
+    if(id.startsWith('co-')) {
+      spot = id.replace('co-','');
+    } else {
+      var ti = document.querySelector('.ti[data-id="'+id+'"]');
+      var spotEl = ti ? ti.querySelector('.name') : null;
+      if(spotEl) spot = spotEl.textContent;
+    }
+    fetch(GAS_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({type:'save', name:name, pin:getUserPin(), key:id, spot:spot, memo:encryptMemo(text, getUserPin())})
+    }).catch(function(){});
+  }
+}
+
+function syncMemos(name) {
+  var pin = getUserPin();
+  fetch(GAS_URL + '?name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin))
+    .then(function(r){ return r.json(); })
+    .then(function(rows){
+      if(!rows || !rows.length) return;
+      var saved = getLocalMemos();
+      var changed = false;
+      rows.forEach(function(row){
+        if(row.key && row.memo) {
+          saved[row.key] = decryptMemo(row.memo, pin);
+          changed = true;
+        }
+      });
+      if(changed) {
+        saved._owner = name;
+        saved._pin = pin;
+        localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
+        document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+          var k = ta.getAttribute('data-key');
+          if(saved[k]) ta.value = saved[k];
+        });
+      }
+    })
+    .catch(function(e){ console.log('sync error', e); });
+}
+
+function sendMemo(id, btn) {
+  var name = getUserName();
+  if(!name) { checkUserName(); return; }
+  var textarea = btn.closest('.tc-memo').querySelector('.memo-input');
+  var memoText = textarea.value.trim();
+  if(!memoText) { showToast('メモを入力してください'); return; }
+  var ti = document.querySelector('.ti[data-id="'+id+'"]');
+  var day = id.startsWith('d1') ? 'DAY1 3/5' : 'DAY2 3/6';
+  var spotEl = ti ? ti.querySelector('.name') : null;
+  var spot = spotEl ? spotEl.textContent : id;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 送信中…';
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ name: name, day: day, spot: spot, memo: memoText })
+  }).then(function() {
+    btn.classList.add('saved');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> 送信済';
+    showToast('事務局へ送信しました');
+    setTimeout(function(){ btn.classList.remove('saved'); btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 事務局へ送信'; btn.disabled = false; }, 2000);
+  }).catch(function() {
+    btn.innerHTML = '<i class="fa-solid fa-xmark"></i> エラー';
+    showToast('送信に失敗しました');
+    setTimeout(function(){ btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 事務局へ送信'; btn.disabled = false; }, 2000);
+  });
+}
+
+function sendCompanyMemo(coName, btn) {
+  var name = getUserName();
+  if(!name) { checkUserName(); return; }
+  var textarea = btn.closest('.mc-memo').querySelector('.memo-input');
+  var memoText = textarea.value.trim();
+  if(!memoText) { showToast('メモを入力してください'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 送信中…';
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ name: name, day: '企業メモ', spot: coName, memo: memoText })
+  }).then(function() {
+    btn.classList.add('saved');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> 送信済';
+    showToast('事務局へ送信しました');
+    setTimeout(function(){ btn.classList.remove('saved'); btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 事務局へ送信'; btn.disabled = false; }, 2000);
+  }).catch(function() {
+    btn.innerHTML = '<i class="fa-solid fa-xmark"></i> エラー';
+    showToast('送信に失敗しました');
+    setTimeout(function(){ btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 事務局へ送信'; btn.disabled = false; }, 2000);
+  });
+}
+
+function renderMemoList() {
+  var list = document.getElementById('memoList');
+  if(!list) return;
+  var saved = getLocalMemos();
+  var keys = Object.keys(saved).filter(function(k){ return k.charAt(0) !== '_'; });
+  if(keys.length === 0) {
+    list.innerHTML = '<div class="memo-empty fade-in"><i class="fa-solid fa-pen-to-square"></i><p>まだメモがありません<br><span style="font-size:.58rem;color:var(--ink4)">各コンテンツのカードを開いてメモを保存できます</span></p></div>';
+    return;
+  }
+  // Split into schedule memos and company memos
+  var scheduleItems = [], companyItems = [];
+  keys.forEach(function(key) {
+    var text = saved[key];
+    if(!text) return;
+    if(key.startsWith('co-')) {
+      companyItems.push({ key: key, name: key.replace('co-',''), text: text });
+    } else {
+      var ti = document.querySelector('.ti[data-id="'+key+'"]');
+      var spotEl = ti ? ti.querySelector('.name') : null;
+      var spot = spotEl ? spotEl.textContent : key;
+      var day = key.startsWith('d1') ? 'DAY1' : 'DAY2';
+      scheduleItems.push({ key: key, day: day, spot: spot, text: text });
+    }
+  });
+  var html = '';
+  if(scheduleItems.length > 0) {
+    html += '<div class="memo-day-label fade-in"><i class="fa-solid fa-calendar-day"></i> スケジュールメモ</div>';
+    scheduleItems.forEach(function(item, i) {
+      html += '<div class="memo-card fade-in' + (i<9?' stagger-'+(i+1):'') + '" style="border-left:3px solid var(--primary)">' +
+        '<div class="memo-card-header">' +
+        '<span class="memo-tag-schedule">' + item.day + '</span>' +
+        '<span class="memo-card-name">' + esc(item.spot) + '</span>' +
+        '</div>' +
+        '<div class="memo-card-text">' + esc(item.text) + '</div>' +
+        '<div class="memo-card-actions">' +
+        '<button class="memo-card-edit" onclick="goToMemo(\''+item.key+'\')"><i class="fa-solid fa-pen"></i> 編集</button>' +
+        '</div></div>';
+    });
+  }
+  if(companyItems.length > 0) {
+    html += '<div class="memo-day-label fade-in" style="color:var(--accent)"><i class="fa-solid fa-building"></i> 企業メモ</div>';
+    companyItems.forEach(function(item, i) {
+      html += '<div class="memo-card fade-in' + (i<9?' stagger-'+(i+1):'') + '" style="border-left:3px solid var(--accent)">' +
+        '<div class="memo-card-header">' +
+        '<span class="memo-tag-company"><i class="fa-solid fa-handshake"></i> 企業</span>' +
+        '<span class="memo-card-name">' + esc(item.name) + '</span>' +
+        '</div>' +
+        '<div class="memo-card-text">' + esc(item.text) + '</div>' +
+        '<div class="memo-card-actions">' +
+        '<button class="memo-card-edit" onclick="goToMemo(\''+esc(item.key)+'\')"><i class="fa-solid fa-pen"></i> 編集</button>' +
+        '</div></div>';
+    });
+  }
+  list.innerHTML = html;
+}
+
+function showSurveyIfDay2() {
+  var now = new Date();
+  var day2 = new Date(2026, 2, 6, 0, 0, 0); // 2026-03-06
+  if(now >= day2) {
+    var card = document.getElementById('surveyCard');
+    if(card) card.style.display = 'block';
+  }
+}
+
+function goToMemo(key) {
+  if(key.startsWith('co-')) {
+    go('mb');
+    var coName = key.replace('co-','');
+    setTimeout(function(){
+      document.querySelectorAll('.co').forEach(function(el){
+        if(el.textContent.trim() === coName) {
+          var mc = el.closest('.mc');
+          var ta = mc ? mc.querySelector('textarea[data-key]') : null;
+          if(ta) { ta.scrollIntoView({behavior:'smooth',block:'center'}); ta.focus(); }
+          else if(mc) mc.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+      });
+    },200);
+  } else {
+    go(key.startsWith('d1') ? 'd1' : 'd2');
+    setTimeout(function(){
+      var ti = document.querySelector('.ti[data-id="'+key+'"]');
+      if(ti) {
+        var tc = ti.querySelector('.tc');
+        if(tc) tc.classList.add('open');
+        var ta = ti.querySelector('textarea[data-key]');
+        if(ta) {
+          setTimeout(function(){ ta.scrollIntoView({behavior:'smooth',block:'center'}); ta.focus(); }, 150);
+        } else {
+          ti.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+      }
+    },200);
+  }
+}
+
+function shareMemoFromList(key, spot, btn) {
+  var name = getUserName();
+  if(!name) { checkUserName(); return; }
+  var saved = getLocalMemos();
+  var text = saved[key];
+  if(!text) return;
+  var day = key.startsWith('co-') ? '企業メモ' : (key.startsWith('d1') ? 'DAY1 3/5' : 'DAY2 3/6');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 送信中…';
+  fetch(GAS_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({name:name, day:day, spot:spot, memo:text})
+  }).then(function(){
+    btn.classList.add('sent');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> 共有済';
+    showToast('事務局へ共有しました');
+  }).catch(function(){
+    btn.innerHTML = '<i class="fa-solid fa-xmark"></i> エラー';
+    setTimeout(function(){ btn.innerHTML = '<i class="fa-solid fa-share-from-square"></i> 事務局へ共有'; btn.disabled=false; },2000);
+  });
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
