@@ -1385,8 +1385,16 @@ if('IntersectionObserver' in window) {
   });
 }
 
+// ===== DATA RESET (v2) =====
+if(localStorage.getItem('tottori-tour-version') !== 'v2') {
+  localStorage.removeItem('tottori-tour-user');
+  localStorage.removeItem('tottori-tour-pin');
+  localStorage.removeItem('tottori-tour-local-memos');
+  localStorage.setItem('tottori-tour-version', 'v2');
+}
+
 // ===== MEMO (Google Sheets) =====
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbzXJfIiOjgRAayqbX-TVIcP3F6xI5VIpV8lcR5pqdtFh1d7BQf21sDe6RAfHlJiZVXcwg/exec';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzyTPvdH-yEpeIP0lX56Cm6m2DSHNEcAEIHoK_-i8fqtldOWz7csXUKanRQyZgQdQBWfw/exec';
 var USER_KEY = 'tottori-tour-user';
 var PIN_KEY = 'tottori-tour-pin';
 
@@ -1428,7 +1436,33 @@ function checkUserName() {
     });
   } else {
     updateHeaderUser(name);
-    syncMemos(name);
+    // ページ読み込み時にサーバーからメモを同期
+    var pin = getUserPin();
+    if(pin) {
+      fetch(GAS_URL + '?action=login&name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin))
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+          if(res.status === 'ok' && res.memos && res.memos.length > 0) {
+            var saved = getLocalMemos();
+            res.memos.forEach(function(row){
+              if(row.key && row.memo) {
+                saved[row.key] = decryptMemo(row.memo, pin);
+              }
+            });
+            saved._owner = name;
+            saved._pin = pin;
+            localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
+            document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+              var k = ta.getAttribute('data-key');
+              if(saved[k]) ta.value = saved[k];
+            });
+          } else if(res.status === 'pin_error') {
+            // PINが無効 → 再ログイン
+            doLogout();
+          }
+        })
+        .catch(function(e){ console.log('sync error', e); });
+    }
   }
 }
 
@@ -1439,41 +1473,78 @@ function submitName() {
   var name = select.value === '__other__' ? input.value.trim() : select.value;
   var pin = pinInput.value;
   if(!name || pin.length !== 4) return;
+
   var err = document.getElementById('nameError');
   if(err) err.style.display = 'none';
-  // Check existing local data
-  var raw = getLocalMemos();
-  if(raw._owner === name && raw._pin && raw._pin !== pin) {
-    // Same name but WRONG PIN → reject login, keep data safe
-    if(err) {
-      err.textContent = 'PINが一致しません。最初に設定したPINを入力してください。';
-      err.style.display = 'block';
-    }
-    return;
-  }
-  // Restore or clear
-  if(raw._owner === name && raw._pin === pin) {
-    // Same user, same PIN → restore local memos
-    document.querySelectorAll('textarea[data-key]').forEach(function(ta){
-      var k = ta.getAttribute('data-key');
-      if(raw[k]) ta.value = raw[k];
+  var btn = document.getElementById('nameBtn');
+  btn.disabled = true;
+  btn.textContent = '認証中...';
+
+  // サーバーでPIN認証
+  fetch(GAS_URL + '?action=login&name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin))
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'pin_error') {
+        // PIN不一致 → 拒否
+        if(err) {
+          err.textContent = 'PINが一致しません。最初に設定したPINを入力してください。';
+          err.style.display = 'block';
+        }
+        btn.disabled = false;
+        btn.textContent = 'はじめる';
+        return;
+      }
+
+      // 認証成功（status: 'ok' または 'new'）
+      // 前のユーザーのデータをクリア
+      var raw = getLocalMemos();
+      if(raw._owner && raw._owner !== name) {
+        localStorage.removeItem(LOCAL_MEMO_KEY);
+        clearAllMemoFields();
+      }
+
+      localStorage.setItem(USER_KEY, name);
+      localStorage.setItem(PIN_KEY, pin);
+
+      // サーバーからメモを復元
+      if(res.memos && res.memos.length > 0) {
+        var saved = getLocalMemos();
+        res.memos.forEach(function(row){
+          if(row.key && row.memo) {
+            saved[row.key] = decryptMemo(row.memo, pin);
+          }
+        });
+        saved._owner = name;
+        saved._pin = pin;
+        localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
+        document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+          var k = ta.getAttribute('data-key');
+          if(saved[k]) ta.value = saved[k];
+        });
+      } else {
+        var saved = getLocalMemos();
+        saved._owner = name;
+        saved._pin = pin;
+        localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
+      }
+
+      // モーダルを閉じる
+      var modal = document.getElementById('nameModal');
+      modal.classList.remove('show');
+      setTimeout(function(){ modal.style.display='none'; }, 300);
+      updateHeaderUser(name);
+      showToast(name + 'さん、ようこそ！');
+      btn.textContent = 'はじめる';
+    })
+    .catch(function(e){
+      console.error('Login error:', e);
+      if(err) {
+        err.textContent = '通信エラーが発生しました。ネットワーク接続を確認してもう一度お試しください。';
+        err.style.display = 'block';
+      }
+      btn.disabled = false;
+      btn.textContent = 'はじめる';
     });
-  } else if(raw._owner && raw._owner !== name) {
-    // Different user → clear old data
-    localStorage.removeItem(LOCAL_MEMO_KEY);
-    clearAllMemoFields();
-  }
-  // Set new user
-  localStorage.setItem(USER_KEY, name);
-  localStorage.setItem(PIN_KEY, pin);
-  var modal = document.getElementById('nameModal');
-  modal.classList.remove('show');
-  setTimeout(function(){ modal.style.display='none'; }, 300);
-  updateHeaderUser(name);
-  syncMemos(name);
-  showToast(name + 'さん、ようこそ！');
-  // Register PIN in background
-  fetch(GAS_URL + '?action=verify&name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin)).catch(function(){});
 }
 
 function updateHeaderUser(name) {
@@ -1629,32 +1700,7 @@ function saveLocal(id, btn) {
   }
 }
 
-function syncMemos(name) {
-  var pin = getUserPin();
-  fetch(GAS_URL + '?name=' + encodeURIComponent(name) + '&pin=' + encodeURIComponent(pin))
-    .then(function(r){ return r.json(); })
-    .then(function(rows){
-      if(!rows || !rows.length) return;
-      var saved = getLocalMemos();
-      var changed = false;
-      rows.forEach(function(row){
-        if(row.key && row.memo) {
-          saved[row.key] = decryptMemo(row.memo, pin);
-          changed = true;
-        }
-      });
-      if(changed) {
-        saved._owner = name;
-        saved._pin = pin;
-        localStorage.setItem(LOCAL_MEMO_KEY, JSON.stringify(saved));
-        document.querySelectorAll('textarea[data-key]').forEach(function(ta){
-          var k = ta.getAttribute('data-key');
-          if(saved[k]) ta.value = saved[k];
-        });
-      }
-    })
-    .catch(function(e){ console.log('sync error', e); });
-}
+// syncMemos は checkUserName() と submitName() のログインフローに統合済み
 
 function sendMemo(id, btn) {
   var name = getUserName();
